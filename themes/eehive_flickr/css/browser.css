@@ -1,0 +1,339 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td { 
+	margin:0;
+	padding:0;
+}
+table {
+	border-collapse:collapse;
+	border-spacing:0;
+}
+fieldset,img { 
+	border:0;
+}
+address,caption,cite,code,dfn,em,strong,th,var {
+	font-style:normal;
+}
+ol,ul {
+	list-style:none;
+}
+caption,th {
+	text-align:left;
+}
+h1,h2,h3,h4,h5,h6 {
+	font-size:100%;
+	font-weight:normal;
+}
+q:before,q:after {
+	content:'';
+}
+abbr,acronym { border:0;
+}
+
+	em {font-style:italic;}
+	.left {float:left;}
+	.right {float:right;}
+	.clear{clear:both;}
+	.center{text-align:center;}
+	body {
+		width:783px;
+		height:560px;
+		font-family: Arial,Helvetica,sans-serif;
+		font-size:12px;
+		color:#000;
+	}
+	body a {
+		color:#0063dc;
+		text-decoration:none;
+	}
+	#flickrBrowser {
+		width:783px;
+	}
+	#flickrNav,
+	#flickrContent,
+	#flickrFooter {
+		width:783px;
+		padding:0 10px;
+	}
+	#flickrContent.narrower {
+		width:755px;
+	}
+	#flickrFooter {
+		width:760px;
+	}
+	#flickrBrowser{
+		margin-top:10px;
+		height:600px;
+	}
+	div#flickrNav {
+		height:25px;
+		padding-left:15px;
+		border-bottom:1px solid #CCC;
+		border-bottom:1px solid #CCC;
+	}
+	div#flickrNav a {
+		display:block;
+		float:left;
+		padding:0 15px;
+		font-weight:bold;
+		border-top:1px solid #CCC;
+		border-left:1px solid #CCC;
+		border-right:1px solid #CCC;
+		border-bottom:1px solid #e6e6e6;
+		margin-right:10px;
+		line-height:23px;
+		height:23px;
+		background-color:#e6e6e6;
+	}
+	div#flickrNav a.active {
+		font-size:14px;
+		color:#FF0084;
+		height:24px;
+		line-height:24px;
+		background-color:#FFF;
+		border-bottom:1px solid #FFF;
+	}
+	h1 {
+		font-weight:bold;
+		font-size:14px;
+		padding:0px 0 0 15px;
+		margin:0px;
+		height:30px;
+		line-height:30px;
+	}
+	#flickrContent {
+		height:440px;
+	}
+	#flickrContent div.text a:hover {
+		background-color:#0063DC;
+		color:#FFF;
+	}
+	#flickrContent div.subtext {
+		font-size:11px;
+		color:#999;
+	}
+	div.imgBox {
+		float:left; 
+		width:85px; 
+		height:85px; 
+		text-align:center; 
+		vertical-align:middle;
+		line-height:120x;
+	}
+	div.imgBox a {
+		vertical-align:middle;
+	}
+	div.imgBox a:hover {
+		background-color:none;
+	}
+	div.imgBox img {
+		border:1px solid #333;
+		margin:1px;
+	}
+	div.imgBox img:hover {
+		border:2px solid #F0C;
+		margin:0px;
+	}
+	div.setBox {
+		float:left;
+		width:122px;
+		margin:0 0 12px 0; 
+		background-image:url('../images/flickrSetBkg.png');
+		background-position:5px 0;
+		background-repeat:no-repeat;
+	}
+	div.setBox a img {
+		padding:8px 8px 15px 13px;
+		width:75px;
+		height:75px;
+		border:0px;
+	}
+	div.setBox div.text {
+		padding-left:8px;
+		padding-right:8px;
+	}
+	div.setBox div.subtext {
+		padding-left:8px;
+	}
+	div.setBox div.text a {
+		font-weight:bold; 
+		font-size:15px; 
+		text-decoration:none;
+	}
+	div.groupBox {
+		width:600px;
+		margin:0 0 12px 0; 
+	}
+	div.groupBox div a {
+		font-weight:bold;
+	}
+	a.groupImg {
+		display:block;
+		float:left;
+		width:110px;
+		height:110px;
+		background-image:url('../images/flickrSetBkg.png');
+		background-position:5px 0;
+		background-repeat:no-repeat;
+	}
+	div.groupBox img {
+		padding:8px 0 0 13px;
+	}
+	div.groupBox div.description {
+		font-size:12px;
+		color:#000;
+	}
+	div.galleryBox {
+		width:600px;
+		margin:0 0 12px 0; 
+	}
+	div.galleryBox div a {
+		font-weight:bold;
+	}
+	a.galleryImg {
+		display:block;
+		float:left;
+		width:110px;
+		height:110px;
+		background-image:url('../images/flickrGalleryBkg.png');
+		background-position:5px 0;
+		background-repeat:no-repeat;
+	}
+	div.galleryBox img {
+		padding:8px 0 0 13px;
+	}
+	div.galleryBox div.description {
+		font-size:12px;
+		color:#000;
+	}
+	div.galleryBox div.notes {
+		color:#999;
+		font-size:11px;
+		line-height:20px;
+	}
+	div#flickrFooter {
+		padding-left:10px;
+		height:45px;
+		text-align:center;
+	}
+	div#flickrFooterPages a {
+		display:inline-block;
+		margin:0 2px 6px 2px;
+		text-decoration:none;
+		border:1px solid #CCC;
+		padding:2px 6px 2px 6px;
+	}
+	div#flickrFooterPages a:hover {
+		border:1px solid #0063dc;
+		background-color: #0063dc;
+		color: #ffffff;
+	}
+	div#flickrFooterPages span.items {
+		color:#999;
+		font-size:11px;
+	}
+	div#flickrFooterPages span.break {
+		color:#999;
+	}
+	div#flickrFooterPages span.current {
+		border:1px solid #CCC;
+		padding:2px 6px 2px 6px;
+		color:#F0C;
+		font-weight:bold;
+		display:inline-block;
+		margin:0 2px 3px 2px;
+	}
+	div#flickrFooterNext span,
+	div#flickrFooterPrev span {
+		border:1px solid #CCC;
+		padding:2px 6px 2px 6px;
+		color:#CCC;
+	}
+	div#flickrFooterNext a,
+	div#flickrFooterPrev a {
+		font-size:12px;
+		text-decoration:none;
+		border:1px solid #CCC;
+		padding:2px 6px 2px 6px;
+	}
+	div#flickrFooterNext a:hover,
+	div#flickrFooterPrev a:hover {
+		border:1px solid #0063dc;
+		background-color: #0063dc;
+		color:#FFF;
+	}
+	div#flickrFooterNext {
+		width:120px;
+		text-align:right;
+		float:right;
+		padding-right:10px;
+	}
+	div#flickrFooterPrev {
+		width:120px;
+		float:left;
+		padding-left:10px;
+		text-align:left;
+	}
+	.jScrollPaneContainer {
+		position: relative;
+		overflow: hidden;
+		z-index: 1;
+	}
+	
+	.jScrollPaneTrack {
+		position: absolute;
+		cursor: pointer;
+		right: 0;
+		top: 0;
+		height: 100%;
+		background-image:url('../images/scrollBkg.png');
+		background-repeat:repeat-y;
+	}
+	.jScrollPaneDrag {
+		position: absolute;
+		background: #0063dc;
+		cursor: pointer;
+		overflow: hidden;
+	}
+	.jScrollPaneDragTop {
+		position: absolute;
+		top: 0;
+		left: 0;
+		overflow: hidden;
+	}
+	.jScrollPaneDragBottom {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		overflow: hidden;
+	}
+	a.jScrollArrowUp {
+		display: block;
+		position: absolute;
+		z-index: 1;
+		top: 0;
+		right: 0;
+		text-indent: -2000px;
+		overflow: hidden;
+		/*background-color: #666;*/
+		height: 9px;
+	}
+	a.jScrollArrowUp:hover {
+		/*background-color: #f60;*/
+	}
+	
+	a.jScrollArrowDown {
+		display: block;
+		position: absolute;
+		z-index: 1;
+		bottom: 0;
+		right: 0;
+		text-indent: -2000px;
+		overflow: hidden;
+		/*background-color: #666;*/
+		height: 9px;
+	}
+	a.jScrollArrowDown:hover {
+		/*background-color: #f60;*/
+	}
+	a.jScrollActiveArrowButton, a.jScrollActiveArrowButton:hover {
+		/*background-color: #f00;*/
+	}
