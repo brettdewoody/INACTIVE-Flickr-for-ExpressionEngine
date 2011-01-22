@@ -23,9 +23,10 @@
 		return $protocol.'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 	}
 	
+	// rather than replace with zeros, just escape brackets
 	function escapejQuery($str) {
-		$str = str_replace("[","0",$str);
-		$str = str_replace("]","0",$str);
+		$str = str_replace("[","\\\[",$str);
+		$str = str_replace("]","\\\]",$str);
 		return $str;
 	}
 ?>

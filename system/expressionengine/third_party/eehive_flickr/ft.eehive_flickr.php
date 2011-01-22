@@ -9,9 +9,20 @@ class Eehive_flickr_ft extends EE_Fieldtype {
  	 	'pi_author_url' => 'http://www.ee-hive.com/expressionengine-2/flickr',
   		'pi_description' => 'Provides tags for integrating Flickr into your website'
 	);
-	
-	function Eehive_flickr_ft() {
+
+	var $cache;
+	var $settings;
+
+	function Eehive_flickr_ft()
+	{
 		parent::EE_Fieldtype();
+		
+		// set up cache
+        if (!isset($this->EE->session->cache['eehive_flickr']))
+        {
+        	$this->EE->session->cache['eehive_flickr'] = array();
+        }
+        $this->cache =& $this->EE->session->cache['eehive_flickr'];
 	}
 	
 	/**
@@ -113,17 +124,46 @@ class Eehive_flickr_ft extends EE_Fieldtype {
 	// --------------------------------------------------------------------
 	
 	
-	
-	
 	/**
-	 * Display Field on Publish
+	 * Display field
 	 *
 	 * @access	public
 	 * @param	existing data
 	 * @return	field html
 	 *
 	 */
-	function display_field($data) {
+	function display_field($data)
+	{
+		return $this->_display_field($data, $this->field_name);
+	}
+	// END
+
+	
+	/**
+	 * Display matrix cell
+	 *
+	 * @access	public
+	 * @param	existing data
+	 * @return	field html
+	 *
+	 */
+	function display_cell($data)
+	{
+		return $this->_display_field($data, $this->cell_name);
+	}
+	// END
+
+	
+	/**
+	 * Display Field on Publish
+	 *
+	 * @access	protected
+	 * @param	existing data
+	 * @param	field/cell name
+	 * @return	field html
+	 *
+	 */
+	function _display_field($data, $field_name) {
 		
 		// Load helpers
 		$this->EE->load->helper('url');
@@ -137,7 +177,7 @@ class Eehive_flickr_ft extends EE_Fieldtype {
 		$picMedium = '';
 		
 		// Flickr Vars
-		$flickrField = $this->field_name;
+		$flickrField = $field_name;		// was previously: $flickrField = $this->field_name;
 		$flickrAPI = $this->settings['option_api'];
 		$flickrSecret = $this->settings['option_secret'];
 		$flickrToken = $this->settings['option_auth'];
@@ -168,30 +208,22 @@ class Eehive_flickr_ft extends EE_Fieldtype {
 		$this->_cp_css();
 		
 		$r = '';
-		$r .= '<div class="flickrContainer" id="flickrContainer_' . $this->escapejQuery($flickrField) . '">';
-		$r .= '<input type="hidden" class="flickrInput" id="' . $flickrField . '" rel="' . $this->escapejQuery($flickrField) . '" name="' . $flickrField . '" value="' . $picRaw . '" />';
-		$r .= '<div class="flickrChooser" id="' . $this->escapejQuery($flickrField) . '_chooser" style="' . $displayChooser . '">
+		$r .= '<div class="flickrContainer" id="flickrContainer_' . $flickrField . '">';
+		$r .= '<input type="hidden" class="flickrInput" id="' . $flickrField . '" rel="' . $flickrField . '" name="' . $flickrField . '" value="' . $picRaw . '" />';
+		$r .= '<div class="flickrChooser" id="' . $flickrField . '_chooser" style="' . $displayChooser . '">
 			<a  class="flickrInput" href="' . $this->_theme_url() . 'views/browser.php?v=Main&apppath=' . APPPATH . '&themeurl=' . $this->_theme_url() . '&fn=' . $flickrField . '&photourl=' . $flickrPhotoURL . '&api=' . $flickrAPI . '&secret=' . $flickrSecret . '&token=' . $flickrToken . '&nsid=' . $flickrNSID . '" onClick="return false;"><button >Choose Photo</button></a> No photo chosen
 		</div>';
-		$r .= '<div class="flickrImage" id="' . $this->escapejQuery($flickrField) . '_image" style="' . $displayImage . '">
+		$r .= '<div class="flickrImage" id="' . $flickrField . '_image" style="' . $displayImage . '">
 			<a class="singleImage" href="' . $picMedium . '">
 				<img src="' . $picSquare . '" align="left" />
 				<span>' . $pic . '</span>
 			</a> 
-			<a class="flickrTrash" href="#" rel="' . $this->escapejQuery($flickrField) . '" onClick="return false;"><img src="' . $this->_theme_url() . 'images/trash-icon.gif" /></a>
+			<a class="flickrTrash" href="#" rel="' . $flickrField . '" onClick="return false;"><img src="' . $this->_theme_url() . 'images/trash-icon.gif" /></a>
 		</div>';
 		$r .= '</div>';
 
 		
 		return $r;
-	}
-	
-	
-	
-	function display_cell($data) {
-		
-		return $this->display_field($data);
-		
 	}
 	
 	
@@ -232,6 +264,7 @@ class Eehive_flickr_ft extends EE_Fieldtype {
 		return $r;
 		
 	}
+	
 	
 	
 	// TAG: Display the photo's title
@@ -292,56 +325,51 @@ class Eehive_flickr_ft extends EE_Fieldtype {
 	
 
 	
-	function _cp_js() {	
-		$this->EE->cp->add_to_head('<script type="text/javascript" src="' . $this->_theme_url() . 'javascript/fancybox/jquery.fancybox-1.3.1.pack.js"></script>');
-		$this->EE->cp->add_to_head('<script type="text/javascript" src="' . $this->_theme_url() . 'javascript/jquery.flickr.js"></script>');
-		$this->EE->cp->add_to_head('<script type="text/javascript" src="' . $this->_theme_url() . 'javascript/jquery.jscrollpane.js"></script>');
+	function _cp_js()
+	{
+		// if our cache key exists, we've already loaded js once so don't do it again
+		if ( !isset($this->cache['ft_cp_js']) )
+		{
+			$this->EE->cp->add_to_head('<script type="text/javascript" src="' . $this->_theme_url() . 'javascript/fancybox/jquery.fancybox-1.3.1.pack.js"></script>');
+			$this->EE->cp->add_to_head('<script type="text/javascript" src="' . $this->_theme_url() . 'javascript/jquery.flickr.js"></script>');
+			$this->EE->cp->add_to_head('<script type="text/javascript" src="' . $this->_theme_url() . 'javascript/jquery.jscrollpane.js"></script>');
+		
+			$this->cache['ft_cp_js'] = TRUE;
+		}
 	}
 	
 	
 	
 	
 	function _cp_css() {
-		$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="' . $this->_theme_url() . 'css/jquery.fancybox-1.3.1.css" />');
-		$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="' . $this->_theme_url() . 'css/flickr.css" />');
-	}
-	
-	
-	
-	
-	function _cp_url() {
-		if (! isset($this->cache['cp_url'])) {
-			$cp_folder_url = $this->EE->config->item('cp_url');
-			if (substr($cp_folder_url, -9) == 'index.php') $cp_folder_url = substr($cp_folder_url,0,-9);
-			if (substr($cp_folder_url, -1) != '/') $cp_folder_url .= '/';
-			$this->cache['cp_url'] = $cp_folder_url;
+		// if our cache key exists, we've already loaded css once so don't do it again
+		if ( !isset($this->cache['ft_cp_css']) )
+		{
+			$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="' . $this->_theme_url() . 'css/jquery.fancybox-1.3.1.css" />');
+			$this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="' . $this->_theme_url() . 'css/flickr.css" />');
+		
+			$this->cache['ft_cp_css'] = TRUE;
 		}
-
-		return $this->cache['cp_url'];
 	}
+	// END
 	
 	
 	
-	function _theme_url() {
-		if (! isset($this->cache['theme_url'])) {
+	function _theme_url()
+	{
+		if( ! isset($this->cache['theme_url']))
+		{
 			$theme_folder_url = $this->EE->config->item('theme_folder_url');
-			if (substr($theme_folder_url, -1) != '/') $theme_folder_url .= '/';
+			if(substr($theme_folder_url, -1) != '/')
+			{
+				$theme_folder_url .= '/';
+			}
 			$this->cache['theme_url'] = $theme_folder_url.'eehive_flickr/';
 		}
 
 		return $this->cache['theme_url'];
 	}
-	
-	
-	
-	// Function to escape necessary jQuery characters
-	// Bug in jQuery prevents us from merely escaping special characters. So instead
-	// we'll replace them with zeros.
-	function escapejQuery($str) {
-		$str = str_replace("[","0",$str);
-		$str = str_replace("]","0",$str);
-		return $str;
-	}
+	// END
 	
 	
 }
