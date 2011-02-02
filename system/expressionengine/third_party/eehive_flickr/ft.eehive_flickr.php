@@ -364,7 +364,7 @@ class Eehive_flickr_ft extends EE_Fieldtype {
 			{
 				$theme_folder_url .= '/';
 			}
-			$this->cache['theme_url'] = $theme_folder_url.'eehive_flickr/';
+			$this->cache['theme_url'] = $theme_folder_url.'/third_party/eehive_flickr/';
 		}
 
 		return $this->cache['theme_url'];
