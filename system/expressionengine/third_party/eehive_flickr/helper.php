@@ -25,6 +25,7 @@ class Eehive_flickr_helper {
 			$this->EE->cp->add_to_head('<script type="text/javascript" src="' . $this->theme_url() . 'javascript/fancybox/jquery.fancybox-1.3.1.pack.js"></script>');
 			$this->EE->cp->add_to_head('<script type="text/javascript" src="' . $this->theme_url() . 'javascript/jquery.flickr.js"></script>');
 			$this->EE->cp->add_to_head('<script type="text/javascript" src="' . $this->theme_url() . 'javascript/jquery.jscrollpane.js"></script>');
+			$this->EE->cp->add_to_head('<script type="text/javascript">Eehive_flickr = {}; Eehive_flickr.browserUrl = "' . $this->browser_url('wygwam') . '";</script>');
 		
 			$this->cache['cp_js'] = TRUE;
 		}

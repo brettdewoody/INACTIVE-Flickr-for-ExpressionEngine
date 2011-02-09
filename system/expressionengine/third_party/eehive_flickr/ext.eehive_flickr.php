@@ -242,7 +242,6 @@ class Eehive_flickr_ext {
 
 		// Add scripts
 		$this->helper->cp_js();
-		$this->EE->cp->add_to_head('<script type="text/javascript">Eehive_flickr = {}; Eehive_flickr.browserUrl = "' . $this->helper->browser_url('wygwam') . '";</script>');
 		
 		// Return the (modified) config
 		return $config;
