@@ -1,17 +1,41 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+require_once PATH_THIRD . 'eehive_flickr/config.php';
+require_once PATH_THIRD . 'eehive_flickr/helper.php';
+require_once PATH_THIRD . 'eehive_flickr/ext.eehive_flickr.php';
 
 $plugin_info = array(
-  'pi_name' => 'Flickr for ExpressionEngine - by EE Hive',
-  'pi_version' =>'2.1.0',
-  'pi_author' =>'EE Hive - Brett DeWoody',
-  'pi_author_url' => 'http://www.ee-hive.com/expressionengine-2/flickr',
-  'pi_description' => 'Provides tags for integrating Flickr into your website',
-  'pi_usage' => Eehive_flickr::usage()
-  );
+	'pi_name' => EEHIVE_FLICKR_NAME,
+	'pi_version' => EEHIVE_FLICKR_VER,
+	'pi_author' => EEHIVE_FLICKR_AUTHOR,
+	'pi_author_url' => EEHIVE_FLICKR_DOCS,
+	'pi_description' => EEHIVE_FLICKR_DESC,
+	'pi_usage' => Eehive_flickr::usage()
+);
 
 class Eehive_flickr {
+
+	var $EE;
+	var $helper;
+	
+	function __construct()
+	{
+		parent::EE_Fieldtype();
+
+		$this->helper = new Eehive_flickr_helper();
+
+		// get settings at least once
+		if ( ! isset($this->helper->cache['settings']))
+		{
+			// Get settings with help of our extension
+			if ( ! class_exists('Eehive_flickr_ext'))
+			{
+				require_once(PATH_THIRD . 'eehive_flickr/ext.eehive_flickr.php');
+			}
+			$this->ext = new Eehive_flickr_ext();
+			$this->ext->get_settings();
+		}
+	}
 	
 	function photostream() {
 		
@@ -494,23 +518,13 @@ class Eehive_flickr {
 	// HELPER FUNCTIONS
 
 	function _flickr() {
-		$this->EE =& get_instance();
 		
-		$this->EE->load->library('api');
-		$this->EE->load->library('api/api_channel_fields'); 
+		require_once PATH_THIRD . 'eehive_flickr/libraries/Phpflickr.php';
 		
-		$eehive_flickr = $this->EE->api_channel_fields->get_global_settings('eehive_flickr');
+		$f = new Phpflickr($this->helper->cache['settings']['option_api'], $this->helper->cache['settings']['option_secret']);
+		$f->setToken($this->helper->cache['settings']['option_auth']);
 		
-		$option_api = $eehive_flickr['option_api'];
-		$option_secret = $eehive_flickr['option_secret'];
-		$option_auth = $eehive_flickr['option_auth'];
-		
-		require_once('libraries/Phpflickr.php');
-		
-		$f = new Phpflickr($option_api, $option_secret);
-		$f->setToken($option_auth);
-		
-		return array($f, $eehive_flickr);
+		return array($f, $this->helper->cache['settings']);
 	}
 	
 	

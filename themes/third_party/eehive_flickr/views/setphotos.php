@@ -1,5 +1,5 @@
 <?php
-	$setPhotos = $f->photosets_getPhotos($_GET['set'],'description','',$perpage, $page,'photos');
+	$setPhotos = $f->photosets_getPhotos($_GET['set'],$f_api_extras,'',$perpage, $page,'photos');
 	$setInfo = $f->photosets_getInfo($_GET['set']);
 				
 	//print_r($setInfo);
@@ -16,17 +16,7 @@
 	$images = '';
 									
 	foreach($setPhotos['photoset']['photo'] as $photo) {
-		$photoBaseURL = "http://farm" . $photo['farm']. ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'];
-		$photoID = $photo['id'];
-		$photoSize = "";
-		$photoTitle = $photo['title'];
-		$photoDescription = $photo['description'];
-		$photoArray = urlencode(serialize(array($photoBaseURL, $photoID, $photoSize, $photoTitle, $photoDescription)));
-		$images .= '<div class="imgBox">';
-		$images .= '<a class="select" href="' . $photoArray . '" rel="' . $photoBaseURL . '" onClick="return false;">';
-		$images .= '<img src="' . $photoBaseURL . '_s.jpg"' . ' height="75" width="75"/>';
-		$images .= '</a>';
-		$images .= '</div>';
+		$images .= makeImgBox($photo);
 	}
 				
 	echo $images;
