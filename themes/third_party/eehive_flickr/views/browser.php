@@ -146,8 +146,8 @@
 			$('form', $sizeChooser).submit(function(e) {
 				e.preventDefault();
 
-				// only proceed if a size is selected				
-				if($('input[name=size]:checked', $sizeChooser).length) {
+				// only proceed if a size is selected
+				if($('input[name=size]:checked', $sizeChooser).size() > 0) {
 					window.parent.CKEDITOR.dialog.getCurrent()._.editor.insertHtml('<img src="' + returnImageUrl($imageUrl.val(), $('input[name=size]:checked', $sizeChooser).val()) + '" />');
 					window.parent.CKEDITOR.dialog.getCurrent().hide();
 				}
