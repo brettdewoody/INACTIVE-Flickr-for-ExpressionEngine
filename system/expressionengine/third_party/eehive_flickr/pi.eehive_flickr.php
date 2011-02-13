@@ -16,8 +16,6 @@ class Eehive_flickr {
 
 	function __construct()
 	{
-		parent::EE_Fieldtype();
-		
 		$this->EE = get_instance();
 
 		$this->helper = new Eehive_flickr_helper();
