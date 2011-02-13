@@ -86,6 +86,8 @@ class Eehive_flickr_ext {
 			$this->EE->db->update('extensions', array(
 				'hook'     => 'wygwam_config',
 				'method'   => 'wygwam_config'));
+				
+			$current = '2.1.2';
 		}
 
 		$this->EE->db->where('class', __CLASS__);
