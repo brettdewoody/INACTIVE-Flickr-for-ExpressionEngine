@@ -3,7 +3,7 @@
 <?php
 			
 	// Retrieve photos from Flickr
-	$recent = $f->people_getPublicPhotos($_GET['nsid'],'','description', $perpage, $page);
+	$recent = $f->people_getPublicPhotos($_GET['nsid'],'',$f_api_extras, $perpage, $page);
 				
 	//print_r($recent);
 	
@@ -15,17 +15,7 @@
 	$images = '';
 									
 	foreach($recent['photos']['photo'] as $photo) {
-		$photoBaseURL = "http://farm" . $photo['farm']. ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'];
-		$photoID = $photo['id'];
-		$photoSize = "";
-		$photoTitle = $photo['title'];
-		$photoDescription = $photo['description'];
-		$photoArray = urlencode(serialize(array($photoBaseURL, $photoID, $photoSize, $photoTitle, $photoDescription)));
-		$images .= '<div class="imgBox">';
-		$images .= '<a class="select" href="' . $photoArray . '" rel="' . $photoBaseURL . '" onClick="return false;">';
-		$images .= '<img src="' . $photoBaseURL . '_s.jpg"' . ' height="75" width="75"/>';
-		$images .= '</a>';
-		$images .= '</div>';
+		$images .= makeImgBox($photo);
 	}
 				
 	echo $images;

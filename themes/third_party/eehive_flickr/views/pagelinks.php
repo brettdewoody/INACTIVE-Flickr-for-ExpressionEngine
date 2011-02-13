@@ -17,7 +17,7 @@
 		if ($i == $page) {
 			$pageLinks .= '<span class="current">' . $page . '</span>';
 		} else {
-			$pageLinks .= '<a' . $pageActive . ' href="' . $flickrURL . '&p=' . $i . '">' . $i . '</a>';
+			$pageLinks .= '<a href="' . $flickrURL . '&p=' . $i . '">' . $i . '</a>';
 		}
 	}
 							

@@ -14,7 +14,7 @@
 	$increment = intval($numTags/($fontMax-$fontMin));
 				
 	for ($i=0; $i < $numTags; $i++) {
-		$output[$tags[$i][_content]] = $size ;
+		$output[$tags[$i]['_content']] = $size ;
 		if ($increment == 0 || $i % $increment == 0 )  { 
 		$size++;
 		}

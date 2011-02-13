@@ -337,3 +337,34 @@ abbr,acronym { border:0;
 	a.jScrollActiveArrowButton, a.jScrollActiveArrowButton:hover {
 		/*background-color: #f00;*/
 	}
+
+#sizeChooser {
+	display: none;
+	position: absolute; top: 200px; left: 181px; width: 400px; background-color: #fff; padding: 10px;
+	border: 2px solid #999;
+	border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+
+	#sizeChooser form {
+		padding-left: 90px; 
+	}
+	
+	#sizeChooser form br {
+		display: none;
+	}
+	
+	#sizeChooser label {
+		display: block; padding: 3px 0;
+	}
+
+	#sizeChooser button {
+		cursor: pointer;
+	}
+
+	#sizeChooserCancel {
+		cursor: pointer;
+	}
+
+	#sizeChooser .img_holder {
+		position: absolute; top: 10px; left: 10px;
+	}
