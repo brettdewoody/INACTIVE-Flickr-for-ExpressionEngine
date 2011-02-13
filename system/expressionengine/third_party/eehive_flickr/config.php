@@ -9,7 +9,7 @@ if (! defined('EEHIVE_FLICKR_NAME'))
 	define('EEHIVE_FLICKR_DOCS', 'http://www.ee-hive.com/expressionengine-2/flickr');
 }
 
-// NSM Addon Updater
-$config['name'] = EEHIVE_FLICKR_NAME;
-$config['version'] = EEHIVE_FLICKR_VER;
-$config['nsm_addon_updater']['versions_xml'] = 'http://www.ee-hive.com/expressionengine-2/flickr';
+// NSM Addon Updater (not yet tho)
+// $config['name'] = EEHIVE_FLICKR_NAME;
+// $config['version'] = EEHIVE_FLICKR_VER;
+// $config['nsm_addon_updater']['versions_xml'] = 'http://www.ee-hive.com/expressionengine-2/flickr';
