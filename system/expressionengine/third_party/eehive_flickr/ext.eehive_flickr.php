@@ -80,6 +80,14 @@ class Eehive_flickr_ext {
 			$current = '2.1.1';
 		}
 
+		if ($current < '2.1.2')
+		{
+			$this->EE->db->where('class', __CLASS__);
+			$this->EE->db->update('extensions', array(
+				'hook'     => 'wygwam_config',
+				'method'   => 'wygwam_config'));
+		}
+
 		$this->EE->db->where('class', __CLASS__);
 		$this->EE->db->update('extensions', array('version' => $this->version));
 	}
@@ -231,6 +239,63 @@ class Eehive_flickr_ext {
 			
 		endswitch;
 
+	}
+	// END
+
+
+	/**
+	 * wygwam_config hook
+	 */
+	function wygwam_config($config, $settings)
+	{
+		switch('shouldistayorshouldigo') :
+			case( ! array_key_exists('extraPlugins', $config)) :
+			case(strpos('flickr', $config['extraPlugins']) === FALSE) :
+				// go!
+			break;
+
+			default :
+				// If another extension shares the same hook,
+				// we need to get the latest and greatest config
+				if ($this->EE->extensions->last_call !== FALSE)
+				{
+					$config = $this->EE->extensions->last_call;
+				}
+		
+				if(isset($config['toolbar']))
+				{
+					foreach($config['toolbar'] as $i => $toolbar)
+					{
+						// we want to insert flickr just before the Image button
+						if(is_array($toolbar) && in_array('Image', $toolbar))
+						{
+							array_unshift($config['toolbar'][$i], 'Flickr');
+
+							// Get settings with help of our extension
+							if ( ! class_exists('Eehive_flickr_helper'))
+							{
+								require_once(PATH_THIRD . 'eehive_flickr/helper.php');
+							}
+					
+							$this->helper = new Eehive_flickr_helper();
+							
+							// Add CSS
+							$this->helper->cp_css();
+					
+							// Add scripts
+							$this->helper->cp_js();
+
+							// That's all folks, cut and run
+							break;
+						}
+					}
+				}
+		
+			break;
+		endswitch;
+	
+		// Return the config
+		return $config;
 	}
 	// END
 
