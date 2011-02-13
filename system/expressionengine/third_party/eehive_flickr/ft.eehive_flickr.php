@@ -20,18 +20,6 @@ class Eehive_flickr_ft extends EE_Fieldtype {
 		parent::__construct();
 
 		$this->helper = new Eehive_flickr_helper();
-
-		// get settings at least once
-		if ( ! isset($this->helper->cache['settings']))
-		{
-			// Get settings with help of our extension
-			if ( ! class_exists('Eehive_flickr_ext'))
-			{
-				require_once(PATH_THIRD . 'eehive_flickr/ext.eehive_flickr.php');
-			}
-			$this->ext = new Eehive_flickr_ext();
-			$this->ext->get_settings();
-		}
 	}
 		
 	
