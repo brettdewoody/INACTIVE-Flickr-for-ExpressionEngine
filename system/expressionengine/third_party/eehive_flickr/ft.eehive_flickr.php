@@ -13,8 +13,6 @@ class Eehive_flickr_ft extends EE_Fieldtype {
   		'pi_description' => EEHIVE_FLICKR_DESC
 	);
 
-	var $settings;
-
 	function __construct()
 	{
 		parent::__construct();
@@ -132,14 +130,17 @@ class Eehive_flickr_ft extends EE_Fieldtype {
 			if($size == 'square') {
 				$r .= "_s.jpg";
 			}
-			if  ($size == "thumb") {
+			if  ($size == "thumb" || $size == 'thumbnail') {
 				$r .= "_t.jpg";
 			}
 			if  ($size == "small") {
 				$r .= "_m.jpg";
 			}
-			if  ($size == "medium") {
+			if  ($size == "medium" || $size == 'medium_500') {
 				$r .= ".jpg";
+			}
+			if  ($size == "medium_640") {
+				$r .= "_z.jpg";
 			}
 			if  ($size == "large") {
 				$r .= "_b.jpg";
@@ -191,7 +192,7 @@ class Eehive_flickr_ft extends EE_Fieldtype {
 	function replace_link($data, $params = array(), $tagdata = FALSE) {
 		
 		// Pull in the site settings
-		$settings = $this->settings;
+		$this->helper->get_settings();
 		
 		// Unserialize the photo data
 		$picArray = unserialize(urldecode($data));
@@ -202,7 +203,7 @@ class Eehive_flickr_ft extends EE_Fieldtype {
 		if (isset($picArray[5])) {
 			$userID = $picArray[5];
 		} else {
-			$userID = $settings['option_nsid'];
+			$userID = $this->helper->cache['settings']['option_nsid'];
 		}
 		
 		$link .= 'http://www.flickr.com/photos/' . $userID . '/' . $id;

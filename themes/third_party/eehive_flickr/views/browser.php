@@ -1,7 +1,7 @@
 <?php
 	require_once($_GET['apppath'] . "third_party/eehive_flickr/libraries/Phpflickr.php");
 				
-	$f = new Phpflickr($_GET['api'], $_GET['secret']);
+	$f = new phpFlickr($_GET['api'], $_GET['secret']);
 	$auth = (isset($_GET['auth'])) ? $_GET['auth'] : '';
 	$f->setToken($auth);
 	
@@ -100,7 +100,7 @@
 			break;
 
 			case 'l':
-				return url + '_l.jpg';
+				return url + '_b.jpg';
 			break;
 		}
 	}
