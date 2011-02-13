@@ -1,15 +1,15 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+require_once PATH_THIRD . 'eehive_flickr/config.php';
 
 $plugin_info = array(
-  'pi_name' => 'Flickr for ExpressionEngine - by EE Hive',
-  'pi_version' =>'2.1.0',
-  'pi_author' =>'EE Hive - Brett DeWoody',
-  'pi_author_url' => 'http://www.ee-hive.com/expressionengine-2/flickr',
-  'pi_description' => 'Provides tags for integrating Flickr into your website',
-  'pi_usage' => Eehive_flickr::usage()
-  );
+	'pi_name' => EEHIVE_FLICKR_NAME,
+	'pi_version' => EEHIVE_FLICKR_VER,
+	'pi_author' => EEHIVE_FLICKR_AUTHOR,
+	'pi_author_url' => EEHIVE_FLICKR_DOCS,
+	'pi_description' => EEHIVE_FLICKR_DESC,
+	'pi_usage' => Eehive_flickr::usage()
+);
 
 class Eehive_flickr {
 	

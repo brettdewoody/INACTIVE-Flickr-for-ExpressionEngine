@@ -1,13 +1,15 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+require_once PATH_THIRD . 'eehive_flickr/config.php';
+
 class Eehive_flickr_ft extends EE_Fieldtype {
 	
 	var $info = array(
-		'name'		=> 'Flickr',
-		'version'	=> '2.1.0',
-		'pi_author' =>'EE Hive - Brett DeWoody',
- 	 	'pi_author_url' => 'http://www.ee-hive.com/expressionengine-2/flickr',
-  		'pi_description' => 'Provides tags for integrating Flickr into your website'
+		'name'		=> EEHIVE_FLICKR_NAME,
+		'version'	=> EEHIVE_FLICKR_VER,
+		'pi_author' => EEHIVE_FLICKR_AUTHOR,
+ 	 	'pi_author_url' => EEHIVE_FLICKR_DOCS,
+  		'pi_description' => EEHIVE_FLICKR_DESC
 	);
 
 	var $cache;
