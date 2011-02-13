@@ -190,7 +190,7 @@ class Eehive_flickr_ft extends EE_Fieldtype {
 	function replace_link($data, $params = array(), $tagdata = FALSE) {
 		
 		// Pull in the site settings
-		$settings = $this->settings;
+		$settings = $this->helper->get_settings();
 		
 		// Unserialize the photo data
 		$picArray = unserialize(urldecode($data));
@@ -201,7 +201,7 @@ class Eehive_flickr_ft extends EE_Fieldtype {
 		if (isset($picArray[5])) {
 			$userID = $picArray[5];
 		} else {
-			$userID = $settings['option_nsid'];
+			$userID = $this->helper->cache['settings']['option_nsid'];
 		}
 		
 		$link .= 'http://www.flickr.com/photos/' . $userID . '/' . $id;
