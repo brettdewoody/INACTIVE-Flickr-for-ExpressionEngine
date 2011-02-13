@@ -1,0 +1,6 @@
+*PLEASE NOTE:* Updated docs are on the horizon. In the meantime, refer to:
+http://www.ee-hive.com/flickr/
+
+*UPGRADING FROM 2.1.0 or 2.1.1?*
+Flickr's activation settings have been moved from the Fieldtype to an Extension.
+Therefore you MUST activate the extension for Flickr to keep working.
