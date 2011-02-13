@@ -15,5 +15,9 @@ $lang = array(
 	'option_profileurl_note' => '',
 	'callback_url' => 'Your callback URL is: <span style="font-weight:bold; color:#999;">%s</span>',
 	'activate_url' => 'Click to activate Flickr',
-	'activation_success' => 'To complete authentication with Flickr, click "Save" below.'
+	'activation_success' => 'To complete authentication with Flickr, click "Save" below.',
+	'instructions_link_text' => 'Complete installation instructions can be found at:',
+	'step_1_title' => 'Step 1: Create a Flickr App',
+	'step_2_title' => 'Step 2: Authorize App',
+	'step_3_title' => 'Step 3: Save Activation Settings'
 );

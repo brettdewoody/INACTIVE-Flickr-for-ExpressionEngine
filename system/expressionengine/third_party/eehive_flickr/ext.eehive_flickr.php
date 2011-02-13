@@ -43,59 +43,6 @@ class Eehive_flickr_ext {
 	// END
 
 
-	function _migrate_from_ft()
-	{
-		$this->EE->load->library('api');
-		$this->EE->load->library('api/api_channel_fields'); 
-		
-		$eehive_flickr = $this->EE->api_channel_fields->get_global_settings('eehive_flickr');
-		if(count($eehive_flickr) > 0)
-		{
-			$this->settings = $this->_normalize_settings($eehive_flickr);
-	
-			$this->EE->db->where('class', __CLASS__);
-			$this->EE->db->update('extensions', array('settings' => serialize($this->settings)));
-		}
-
-		// wipe global ft setup
-		$this->EE->db->where('name', 'eehive_flickr');
-		$this->EE->db->update('fieldtypes', array('has_global_settings' => 'n', 'settings' => base64_encode(serialize(array()))));
-	}
-	// END
-
-
-	/**
-	 * Update Extension
-	 */
-	function update_extension($current = '')
-	{
-		if($current == '' OR $current == $this->version) {
-			return FALSE;
-		}
-		
-		if ($current < '2.1.1')
-		{
-			$this->_migrate_from_ft();
-
-			$current = '2.1.1';
-		}
-
-		if ($current < '2.1.2')
-		{
-			$this->EE->db->where('class', __CLASS__);
-			$this->EE->db->update('extensions', array(
-				'hook'     => 'wygwam_config',
-				'method'   => 'wygwam_config'));
-				
-			$current = '2.1.2';
-		}
-
-		$this->EE->db->where('class', __CLASS__);
-		$this->EE->db->update('extensions', array('version' => $this->version));
-	}
-	// END
-
-
 	/**
 	 * Disable Extension
 	 */
@@ -127,7 +74,6 @@ class Eehive_flickr_ext {
 		if ($query->num_rows() > 0)
 		{
 			$this->settings = $this->_normalize_settings(unserialize($query->row()->settings));
-			log_message('debug', 'EEHive Flickr has retrieved settings from DB.');
 		}
 
 		return $this->settings;
@@ -246,6 +192,38 @@ class Eehive_flickr_ext {
 
 
 	/**
+	 * Update Extension
+	 */
+	function update_extension($current = '')
+	{
+		if($current == '' OR $current == $this->version) {
+			return FALSE;
+		}
+		
+		if ($current < '2.1.1')
+		{
+			$this->_migrate_from_ft();
+
+			$current = '2.1.1';
+		}
+
+		if ($current < '2.1.2')
+		{
+			$this->EE->db->where('class', __CLASS__);
+			$this->EE->db->update('extensions', array(
+				'hook'     => 'wygwam_config',
+				'method'   => 'wygwam_config'));
+				
+			$current = '2.1.2';
+		}
+
+		$this->EE->db->where('class', __CLASS__);
+		$this->EE->db->update('extensions', array('version' => $this->version));
+	}
+	// END
+
+
+	/**
 	 * wygwam_config hook
 	 */
 	function wygwam_config($config, $settings)
@@ -298,6 +276,33 @@ class Eehive_flickr_ext {
 	
 		// Return the config
 		return $config;
+	}
+	// END
+
+
+	/**
+	 * Function to grab settings from FT, and update DB
+	 *
+	 * @return void
+	 */
+	function _migrate_from_ft()
+	{
+		$this->EE->load->library('api');
+		$this->EE->load->library('api/api_channel_fields'); 
+		
+		$eehive_flickr = $this->EE->api_channel_fields->get_global_settings('eehive_flickr');
+		if(count($eehive_flickr) > 0)
+		{
+			$this->settings = $this->_normalize_settings($eehive_flickr);
+	
+			$this->EE->db->where('class', __CLASS__);
+			$this->EE->db->update('extensions', array('settings' => serialize($this->settings)));
+
+		}
+
+		// update global ft row just in case
+		$this->EE->db->where('name', 'eehive_flickr');
+		$this->EE->db->update('fieldtypes', array('has_global_settings' => 'n', 'settings' => base64_encode(serialize(array()))));
 	}
 	// END
 

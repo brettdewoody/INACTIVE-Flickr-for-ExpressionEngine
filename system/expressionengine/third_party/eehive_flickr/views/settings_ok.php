@@ -4,8 +4,12 @@
 
 	if(isset($message_success))
 	{
-		echo '<p class="notice success">' . $message_success . '</p>';
+		echo '<p class="notice success">' . $message_success . '</p><hr /><br />';
 	}
+
+	echo '<p>' . lang('instructions_link_text') . ' <a href="' . EEHIVE_FLICKR_DOCS . '" target="_blank">' . EEHIVE_FLICKR_DOCS . '</a></p><br />';
+
+	echo '<h3>' . lang('step_3_title') . '</h3>';
 
 	$this->table->set_template($cp_pad_table_template);
 	$this->table->set_heading(

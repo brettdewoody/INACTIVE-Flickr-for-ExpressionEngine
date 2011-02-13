@@ -4,7 +4,16 @@
 	
 	if(isset($message_error))
 	{
-		echo '<p class="notice failure">' . $message_error . '</p>';
+		echo '<p class="notice failure">' . $message_error . '</p><hr /><br />';
+	}
+
+	echo '<p>' . lang('instructions_link_text') . ' <a href="' . EEHIVE_FLICKR_DOCS . '" target="_blank">' . EEHIVE_FLICKR_DOCS . '</a></p><br />';
+
+	echo '<h3>' . lang('step_1_title') . '</h3>';
+
+	if(isset($callback_url))
+	{
+		echo '<p>' . sprintf(lang('callback_url'), $callback_url) . '</p><br />';
 	}
 
 	$this->table->set_template($cp_pad_table_template);
@@ -21,18 +30,16 @@
 	}
 	echo $this->table->generate();
 
-	if(isset($callback_url))
-	{
-		printf(lang('callback_url'), $callback_url);
-	}
-	
-	if(isset($activate_url))
-	{
-		echo '<p><a href="' . $activate_url . '" title="' . lang('activate_url') . '">' . lang('activate_url') . '</a></p>';
-	}
 	echo '<p>' . form_submit('submit', lang('save'), 'class="submit"') . '</p>';
 	$this->table->clear();
 	echo form_close();
+
+	if(isset($activate_url))
+	{
+		echo '<br /><br /><h3>' . lang('step_2_title') . '</h3>';
+		echo '<p><a href="' . $activate_url . '" title="' . lang('activate_url') . '">' . lang('activate_url') . '</a></p>';
+	}
+
 
 /* End of file settings_setup.php */
 /* Location: ./system/expressionengine/third_party/eehive_flickr/views/settings_setup.php */
