@@ -2,7 +2,8 @@
 	require_once($_GET['apppath'] . "third_party/eehive_flickr/libraries/Phpflickr.php");
 				
 	$f = new Phpflickr($_GET['api'], $_GET['secret']);
-	$f->setToken($_GET['auth']);
+	$auth = (isset($_GET['auth'])) ? $_GET['auth'] : '';
+	$f->setToken($auth);
 	
 	$active = $_GET['v'];
 	
