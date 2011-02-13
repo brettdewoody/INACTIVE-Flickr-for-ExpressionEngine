@@ -100,7 +100,7 @@
 			break;
 
 			case 'l':
-				return url + '_l.jpg';
+				return url + '_b.jpg';
 			break;
 		}
 	}
