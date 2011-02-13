@@ -1,6 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 require_once PATH_THIRD . 'eehive_flickr/config.php';
+require_once PATH_THIRD . 'eehive_flickr/helper.php';
 
 $plugin_info = array(
 	'pi_name' => EEHIVE_FLICKR_NAME,
@@ -12,10 +13,18 @@ $plugin_info = array(
 );
 
 class Eehive_flickr {
-	
-	function photostream() {
+
+	function __construct()
+	{
+		parent::EE_Fieldtype();
 		
-		$this->EE =& get_instance();
+		$this->EE = get_instance();
+
+		$this->helper = new Eehive_flickr_helper();
+	}
+	// END
+
+	function photostream() {
 		
 		$template = $this->EE->TMPL->tagdata;
 		
@@ -69,8 +78,6 @@ class Eehive_flickr {
 	
 	function favorites() {
 		
-		$this->EE =& get_instance();
-		
 		$template = $this->EE->TMPL->tagdata;
 		
 		$numPhotos = $this->EE->TMPL->fetch_param('limit');
@@ -122,8 +129,6 @@ class Eehive_flickr {
 	
 	function photosets() {
 		
-		$this->EE =& get_instance();
-		
 		$template = $this->EE->TMPL->tagdata;
 		
 		// Load the flickr class
@@ -167,8 +172,6 @@ class Eehive_flickr {
 	
 	
 	function photoset() {
-		
-		$this->EE =& get_instance();
 		
 		$template = $this->EE->TMPL->tagdata;
 		
@@ -221,8 +224,6 @@ class Eehive_flickr {
 	
 	function groups() {
 		
-		$this->EE =& get_instance();
-		
 		$template = $this->EE->TMPL->tagdata;
 		
 		// Load the flickr class
@@ -259,8 +260,6 @@ class Eehive_flickr {
 	
 	
 	function groupset() {
-		
-		$this->EE =& get_instance();
 		
 		$template = $this->EE->TMPL->tagdata;
 		
@@ -306,8 +305,6 @@ class Eehive_flickr {
 	
 	
 	function photo() {
-		
-		$this->EE =& get_instance();
 		
 		$template = $this->EE->TMPL->tagdata;
 		
@@ -389,8 +386,6 @@ class Eehive_flickr {
 	
 	function tagcloud() {
 		
-		$this->EE =& get_instance();
-		
 		$template = $this->EE->TMPL->tagdata;
 		
 		// Load the flickr class
@@ -445,8 +440,6 @@ class Eehive_flickr {
 	
 	function tagset() {
 		
-		$this->EE =& get_instance();
-		
 		$template = $this->EE->TMPL->tagdata;
 		
 		$tag = $this->EE->TMPL->fetch_param('tag');
@@ -494,23 +487,15 @@ class Eehive_flickr {
 	// HELPER FUNCTIONS
 
 	function _flickr() {
-		$this->EE =& get_instance();
+		// need settings from DB to run
+		$this->helper->get_settings();
+
+		require_once PATH_THIRD . 'eehive_flickr/libraries/Phpflickr.php';
 		
-		$this->EE->load->library('api');
-		$this->EE->load->library('api/api_channel_fields'); 
+		$f = new Phpflickr($this->helper->cache['settings']['option_api'], $this->helper->cache['settings']['option_secret']);
+		$f->setToken($this->helper->cache['settings']['option_auth']);
 		
-		$eehive_flickr = $this->EE->api_channel_fields->get_global_settings('eehive_flickr');
-		
-		$option_api = $eehive_flickr['option_api'];
-		$option_secret = $eehive_flickr['option_secret'];
-		$option_auth = $eehive_flickr['option_auth'];
-		
-		require_once('libraries/Phpflickr.php');
-		
-		$f = new Phpflickr($option_api, $option_secret);
-		$f->setToken($option_auth);
-		
-		return array($f, $eehive_flickr);
+		return array($f, $this->helper->cache['settings']);
 	}
 	
 	
@@ -574,4 +559,5 @@ class Eehive_flickr {
 
 }
 
-?>
+/* End of file pi.eehive_flickr.php */
+/* Location: ./system/expressionengine/third_party/eehive_flickr/pi.eehive_flickr.php */
