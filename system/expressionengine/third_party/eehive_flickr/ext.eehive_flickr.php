@@ -31,6 +31,8 @@ class Eehive_flickr_ext {
 		// add the row to exp_extensions
 		$this->EE->db->insert('extensions', array(
 			'class'    => __CLASS__,
+			'hook'     => 'wygwam_config',
+			'method'   => 'wygwam_config',
 			'priority' => 10,
 			'version'  => $this->version,
 			'settings' => serialize($this->_normalize_settings()),
@@ -207,14 +209,17 @@ class Eehive_flickr_ext {
 			$current = '2.1.1';
 		}
 
-		if ($current < '2.1.2')
+		// while wygwam support was added in 2.1.2, the activate_extension
+		// neglected to add the hook!
+		// if ($current < '2.1.2')
+		if ($current < '2.1.3')
 		{
 			$this->EE->db->where('class', __CLASS__);
 			$this->EE->db->update('extensions', array(
 				'hook'     => 'wygwam_config',
 				'method'   => 'wygwam_config'));
 				
-			$current = '2.1.2';
+			$current = '2.1.3';
 		}
 
 		$this->EE->db->where('class', __CLASS__);
@@ -230,7 +235,7 @@ class Eehive_flickr_ext {
 	{
 		switch('shouldistayorshouldigo') :
 			case( ! array_key_exists('extraPlugins', $config)) :
-			case(strpos('flickr', $config['extraPlugins']) === FALSE) :
+			case(strpos($config['extraPlugins'], 'flickr') === FALSE) :
 				// go!
 			break;
 
