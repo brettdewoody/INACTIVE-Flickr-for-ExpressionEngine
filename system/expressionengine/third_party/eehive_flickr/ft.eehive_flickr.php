@@ -13,8 +13,6 @@ class Eehive_flickr_ft extends EE_Fieldtype {
   		'pi_description' => EEHIVE_FLICKR_DESC
 	);
 
-	var $settings;
-
 	function __construct()
 	{
 		parent::__construct();
@@ -209,6 +207,102 @@ class Eehive_flickr_ft extends EE_Fieldtype {
 		return $link;
 	}
 	
+	// TAG: Display the photo, in the appropriate size
+	function replace_tag($data, $params = array(), $tagdata = FALSE) {
+		
+		// Unserialize the photo data
+		$picArray = unserialize(urldecode($data));
+		$pic = $picArray[0];
+		
+		$r = '';
+		
+		$r .= $pic;
+		
+		if (isset($params['size'])) {
+			$size = $params['size'];
+			if($size == 'square') {
+				$r .= "_s.jpg";
+			}
+			if  ($size == "thumb" || $size == 'thumbnail') {
+				$r .= "_t.jpg";
+			}
+			if  ($size == "small") {
+				$r .= "_m.jpg";
+			}
+			if  ($size == "medium" || $size == 'medium_500') {
+				$r .= ".jpg";
+			}
+			if  ($size == "medium_640") {
+				$r .= "_z.jpg";
+			}
+			if  ($size == "large") {
+				$r .= "_b.jpg";
+			}
+		} else {
+			// Else display the medium size
+			$r .= ".jpg";
+		}
+		
+		return $r;
+		
+	}
+	
+	
+	// TAG: Display the photo's title
+	function replace_title($data, $params = array(), $tagdata = FALSE) {
+		// Unserialize the photo data
+		$picArray = unserialize(urldecode($data));
+		$title = $picArray[3];
+		
+		return $title;
+	}
+	
+	
+	// TAG: Display the photo's description
+	function replace_description($data, $params = array(), $tagdata = FALSE) {
+		// Unserialize the photo data
+		$picArray = unserialize(urldecode($data));
+		$description = $picArray[4];
+		
+		return $description;
+	}
+	
+	// TAG: Display the photo's owner
+	function replace_owner($data, $params = array(), $tagdata = FALSE) {
+		// Unserialize the photo data
+		$picArray = unserialize(urldecode($data));
+		if (isset($picArray[5])) {
+			$owner = $picArray[5];
+		} else {
+			$owner = NULL;
+		}
+		
+		return $owner;
+	}
+	
+	
+	// TAG: Display the photo's page URL
+	function replace_link($data, $params = array(), $tagdata = FALSE) {
+		
+		// Pull in the site settings
+		$this->helper->get_settings();
+		
+		// Unserialize the photo data
+		$picArray = unserialize(urldecode($data));
+		$id = $picArray[1];
+		
+		$link = '';
+		
+		if (isset($picArray[5])) {
+			$userID = $picArray[5];
+		} else {
+			$userID = $this->helper->cache['settings']['option_nsid'];
+		}
+		
+		$link .= 'http://www.flickr.com/photos/' . $userID . '/' . $id;
+		
+		return $link;
+	}
 
 }
 

@@ -19,6 +19,9 @@ class Eehive_flickr {
 		$this->EE = get_instance();
 
 		$this->helper = new Eehive_flickr_helper();
+		
+		$this->api_extras = 'description,url_sq,url_t,url_s,url_m,url_z,url_l,url_o';
+
 	}
 	// END
 
@@ -38,7 +41,7 @@ class Eehive_flickr {
 		$sz = $this->_size($this->EE->TMPL->fetch_param('size'));
 		
 		// Retrieve photostream from Flickr
-		$recent = $f->people_getPublicPhotos($flickr_settings['option_nsid'], 1, 'description, url_s, url_m, url_o', $numPhotos, 1);
+		$recent = $f->people_getPublicPhotos($flickr_settings['option_nsid'], 1, $this->api_extras, $numPhotos, 1);
 
 		// If number of returned photo is less than num
 		$numPhotos = min($numPhotos,$recent['photos']['total']);
@@ -51,13 +54,17 @@ class Eehive_flickr {
 			
 			// Retrieve the data for each photo
 			$flickr_data = $flickr_photos[$i];
-			
+
 			$variable_row = array(
 				'flickr_img' 			=> 'http://farm' . $flickr_data['farm'] . '.static.flickr.com/' . $flickr_data['server'] . '/' . $flickr_data['id'] . '_' . $flickr_data['secret'] . $sz . '.jpg',
 				'flickr_url' 			=> $flickr_settings['option_photourl'] . $flickr_data['id'],
-				'flickr_url_small' 		=> $flickr_data['url_s'],
-				'flickr_url_medium' 	=> $flickr_data['url_m'],
-				'flickr_url_orig' 		=> $flickr_data['url_o'],
+				'flickr_url_square'		=> $f->buildPhotoURL($flickr_data, "square") ,
+				'flickr_url_thumb'		=> isset($flickr_data['url_t']) ? $flickr_data['url_t'] : '',
+				'flickr_url_small' 		=> isset($flickr_data['url_s']) ? $flickr_data['url_s'] : '',
+				'flickr_url_medium' 	=> isset($flickr_data['url_m']) ? $flickr_data['url_m'] : '',
+				'flickr_url_medium_640'	=> isset($flickr_data['url_z']) ? $flickr_data['url_z'] : '',
+				'flickr_url_large'	 	=> isset($flickr_data['url_l']) ? $flickr_data['url_l'] : '',
+				'flickr_url_orig' 		=> isset($flickr_data['url_o']) ? $flickr_data['url_o'] :  '',
 				'flickr_title' 			=> $flickr_data['title'],
 				'flickr_description' 	=> $flickr_data['description']
 			);
@@ -90,7 +97,7 @@ class Eehive_flickr {
 		$sz = $this->_size($this->EE->TMPL->fetch_param('size'));
 		
 		// Retrieve favorites from Flickr
-		$favorites = $f->favorites_getPublicList($flickr_settings['option_nsid'], NULL, NULL, 'description, url_s, url_m, url_o', $numPhotos, 1);
+		$favorites = $f->favorites_getPublicList($flickr_settings['option_nsid'], NULL, NULL, $this->api_extras, $numPhotos, 1);
 		
 		// If number of returned photo is less than num
 		$numPhotos = min($numPhotos,$favorites['photos']['total']);
@@ -108,9 +115,13 @@ class Eehive_flickr {
 			$variable_row = array(
 				'flickr_img' 			=> 'http://farm' . $flickr_data['farm'] . '.static.flickr.com/' . $flickr_data['server'] . '/' . $flickr_data['id'] . '_' . $flickr_data['secret'] . $sz . '.jpg',
 				'flickr_url' 			=> 'http://www.flickr.com/photos/' . $flickr_data['owner'] . '/' . $flickr_data['id'],
-				'flickr_url_small' 		=> $flickr_data['url_s'],
-				'flickr_url_medium' 	=> $flickr_data['url_m'],
-				'flickr_url_orig' 		=> isset($flickr_data['url_o']) ?  $flickr_data['url_o'] :  '',
+				'flickr_url_square'		=> $f->buildPhotoURL($flickr_data, "square") ,
+				'flickr_url_thumb'		=> isset($flickr_data['url_t']) ? $flickr_data['url_t'] : '',
+				'flickr_url_small' 		=> isset($flickr_data['url_s']) ? $flickr_data['url_s'] : '',
+				'flickr_url_medium' 	=> isset($flickr_data['url_m']) ? $flickr_data['url_m'] : '',
+				'flickr_url_medium_640'	=> isset($flickr_data['url_z']) ? $flickr_data['url_z'] : '',
+				'flickr_url_large'	 	=> isset($flickr_data['url_l']) ? $flickr_data['url_l'] : '',
+				'flickr_url_orig' 		=> isset($flickr_data['url_o']) ? $flickr_data['url_o'] :  '',
 				'flickr_title' 			=> $flickr_data['title'],
 				'flickr_description' 	=> $flickr_data['description']
 			);
@@ -187,7 +198,7 @@ class Eehive_flickr {
 		$sz = $this->_size($this->EE->TMPL->fetch_param('size'));
 		
 		// Retrieve sets from Flickr
-		$set_photos = $f->photosets_getPhotos($setId, 'description, url_s, url_m, url_o');
+		$set_photos = $f->photosets_getPhotos($setId, $this->api_extras);
 		
 		// If number of returned photo is less than num
 		$numPhotos = min($numPhotos,count($set_photos['photoset']['photo']));
@@ -204,9 +215,13 @@ class Eehive_flickr {
 			$variable_row = array(
 				'flickr_img' 			=> 'http://farm' . $flickr_data['farm'] . '.static.flickr.com/' . $flickr_data['server'] . '/' . $flickr_data['id'] . '_' . $flickr_data['secret'] . $sz . '.jpg',
 				'flickr_url' 			=> $flickr_settings['option_photourl'] . '/' . $flickr_data['id'],
-				'flickr_url_small' 		=> $flickr_data['url_s'],
-				'flickr_url_medium' 	=> $flickr_data['url_m'],
-				'flickr_url_orig' 		=> isset($flickr_data['url_o']) ?  $flickr_data['url_o'] :  '',
+				'flickr_url_square'		=> $f->buildPhotoURL($flickr_data, "square") ,
+				'flickr_url_thumb'		=> isset($flickr_data['url_t']) ? $flickr_data['url_t'] : '',
+				'flickr_url_small' 		=> isset($flickr_data['url_s']) ? $flickr_data['url_s'] : '',
+				'flickr_url_medium' 	=> isset($flickr_data['url_m']) ? $flickr_data['url_m'] : '',
+				'flickr_url_medium_640'	=> isset($flickr_data['url_z']) ? $flickr_data['url_z'] : '',
+				'flickr_url_large'	 	=> isset($flickr_data['url_l']) ? $flickr_data['url_l'] : '',
+				'flickr_url_orig' 		=> isset($flickr_data['url_o']) ? $flickr_data['url_o'] :  '',
 				'flickr_title' 			=> $flickr_data['title'],
 				'flickr_description' 	=> $flickr_data['description']
 			);
@@ -275,7 +290,7 @@ class Eehive_flickr {
 		$sz = $this->_size($this->EE->TMPL->fetch_param('size'));
 		
 		// Retrieve sets from Flickr
-		$group_photos = $f->groups_pools_getPhotos($groupId, NULL, NULL, 'description, url_s, url_m, url_o', $numPhotos, NULL);
+		$group_photos = $f->groups_pools_getPhotos($groupId, NULL, NULL, $this->api_extras, $numPhotos, NULL);
 		
 		$variables = array();
 		
@@ -284,9 +299,13 @@ class Eehive_flickr {
 			$variable_row = array(
 				'flickr_img' 			=> 'http://farm' . $flickr_data['farm'] . '.static.flickr.com/' . $flickr_data['server'] . '/' . $flickr_data['id'] . '_' . $flickr_data['secret'] . $sz . '.jpg',
 				'flickr_url' 			=> 'http://www.flickr.com/photos/' .  $flickr_data['owner'] . '/' . $flickr_data['id'],
-				'flickr_url_small' 		=> $flickr_data['url_s'],
-				'flickr_url_medium' 	=> $flickr_data['url_m'],
-				'flickr_url_orig' 		=> isset($flickr_data['url_o']) ?  $flickr_data['url_o'] :  '',
+				'flickr_url_square'		=> $f->buildPhotoURL($flickr_data, "square") ,
+				'flickr_url_thumb'		=> isset($flickr_data['url_t']) ? $flickr_data['url_t'] : '',
+				'flickr_url_small' 		=> isset($flickr_data['url_s']) ? $flickr_data['url_s'] : '',
+				'flickr_url_medium' 	=> isset($flickr_data['url_m']) ? $flickr_data['url_m'] : '',
+				'flickr_url_medium_640'	=> isset($flickr_data['url_z']) ? $flickr_data['url_z'] : '',
+				'flickr_url_large'	 	=> isset($flickr_data['url_l']) ? $flickr_data['url_l'] : '',
+				'flickr_url_orig' 		=> isset($flickr_data['url_o']) ? $flickr_data['url_o'] :  '',
 				'flickr_title' 			=> $flickr_data['title'],
 				'flickr_description' 	=> $flickr_data['description'],
 				'flickr_owner' 			=> $flickr_data['owner']
@@ -301,7 +320,7 @@ class Eehive_flickr {
 	}
 	
 	
-	
+	/* unfinished, use with caution - or perhaps don't at all, just yet */
 	function photo() {
 		
 		$template = $this->EE->TMPL->tagdata;
@@ -320,6 +339,10 @@ class Eehive_flickr {
 		$flickr_data = $f->photos_getInfo($photoId);
 		$flickr_comments = $f->photos_comments_getList($photoId);
 		$flickr_geo = $f->photos_geo_getLocation($photoId);
+		
+		//
+		if($flickr_data['stat'] != 'ok') return;
+		$flickr_data = $flickr_data['photo'];
 		
 		$variables = array();
 		
@@ -360,8 +383,12 @@ class Eehive_flickr {
 		$variables[] = array(
 				'flickr_img' 			=> 'http://farm' . $flickr_data['farm'] . '.static.flickr.com/' . $flickr_data['server'] . '/' . $flickr_data['id'] . '_' . $flickr_data['secret'] . $sz . '.jpg',
 				'flickr_url' 			=> $flickr_settings['option_photourl'] . $flickr_data['id'],
-				'flickr_url_small' 		=> 'http://farm' . $flickr_data['farm'] . '.static.flickr.com/' . $flickr_data['server'] . '/' . $flickr_data['id'] . '_' . $flickr_data['secret'] . '_s.jpg',
-				'flickr_url_medium' 	=> 'http://farm' . $flickr_data['farm'] . '.static.flickr.com/' . $flickr_data['server'] . '/' . $flickr_data['id'] . '_' . $flickr_data['secret'] . '_m.jpg',
+				'flickr_url_square' 	=> 'http://farm' . $flickr_data['farm'] . '.static.flickr.com/' . $flickr_data['server'] . '/' . $flickr_data['id'] . '_' . $flickr_data['secret'] . '_s.jpg',
+				'flickr_url_thumb' 		=> 'http://farm' . $flickr_data['farm'] . '.static.flickr.com/' . $flickr_data['server'] . '/' . $flickr_data['id'] . '_' . $flickr_data['secret'] . '_t.jpg',
+				'flickr_url_small' 		=> 'http://farm' . $flickr_data['farm'] . '.static.flickr.com/' . $flickr_data['server'] . '/' . $flickr_data['id'] . '_' . $flickr_data['secret'] . '_m.jpg',
+				'flickr_url_medium' 	=> 'http://farm' . $flickr_data['farm'] . '.static.flickr.com/' . $flickr_data['server'] . '/' . $flickr_data['id'] . '_' . $flickr_data['secret'] . '.jpg',
+				'flickr_url_medium_640'	=> 'http://farm' . $flickr_data['farm'] . '.static.flickr.com/' . $flickr_data['server'] . '/' . $flickr_data['id'] . '_' . $flickr_data['secret'] . '_z.jpg',
+				'flickr_url_large'		=> 'http://farm' . $flickr_data['farm'] . '.static.flickr.com/' . $flickr_data['server'] . '/' . $flickr_data['id'] . '_' . $flickr_data['secret'] . '_b.jpg',
 				'flickr_title' 			=> $flickr_data['title'],
 				'flickr_description' 	=> $flickr_data['description'],
 				'flickr_comment_total' 	=> $flickr_data['comments'],
@@ -370,9 +397,9 @@ class Eehive_flickr {
 				'flickr_latitude'		=> $flickr_geo['location']['latitude'],
 				'flickr_longitude'		=> $flickr_geo['location']['longitude'],
 				'flickr_locality'		=> $flickr_geo['location']['locality']['_content'],
-				'tags'					=> $tags,
-				'notes'					=> $notes,
-				'comments'				=> $comments
+				'flickr_tags'			=> $tags,
+				'flickr_notes'			=> $notes,
+				'flickr_comments'		=> $comments
 			);
 		
 		$r = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $variables);
@@ -454,7 +481,7 @@ class Eehive_flickr {
 		$sz = $this->_size($this->EE->TMPL->fetch_param('size'));
 		
 		// Retrieve sets from Flickr
-		$search_array = array('user_id' => $flickr_settings['option_nsid'], 'tags' => $tag, 'extras' => "description, url_s, url_m, url_o", 'per_page' => $numPhotos);
+		$search_array = array('user_id' => $flickr_settings['option_nsid'], 'tags' => $tag, 'extras' => $this->api_extras, 'per_page' => $numPhotos);
 		$tag_photos = $f->photos_search($search_array);
 		//print_r($tag_photos);
 		
@@ -465,9 +492,13 @@ class Eehive_flickr {
 			$variable_row = array(
 				'flickr_img' 			=> 'http://farm' . $flickr_data['farm'] . '.static.flickr.com/' . $flickr_data['server'] . '/' . $flickr_data['id'] . '_' . $flickr_data['secret'] . $sz . '.jpg',
 				'flickr_url' 			=> $flickr_settings['option_photourl'] . $flickr_data['id'],
-				'flickr_url_small' 		=> $flickr_data['url_s'],
-				'flickr_url_medium' 	=> $flickr_data['url_m'],
-				'flickr_url_orig' 		=> isset($flickr_data['url_o']) ?  $flickr_data['url_o'] :  '',
+				'flickr_url_square'		=> $f->buildPhotoURL($flickr_data, "square") ,
+				'flickr_url_thumb'		=> isset($flickr_data['url_t']) ? $flickr_data['url_t'] : '',
+				'flickr_url_small' 		=> isset($flickr_data['url_s']) ? $flickr_data['url_s'] : '',
+				'flickr_url_medium' 	=> isset($flickr_data['url_m']) ? $flickr_data['url_m'] : '',
+				'flickr_url_medium_640'	=> isset($flickr_data['url_z']) ? $flickr_data['url_z'] : '',
+				'flickr_url_large'	 	=> isset($flickr_data['url_l']) ? $flickr_data['url_l'] : '',
+				'flickr_url_orig' 		=> isset($flickr_data['url_o']) ? $flickr_data['url_o'] :  '',
 				'flickr_title' 			=> $flickr_data['title'],
 				'flickr_description' 	=> $flickr_data['description']
 			);
@@ -490,7 +521,7 @@ class Eehive_flickr {
 
 		require_once PATH_THIRD . 'eehive_flickr/libraries/Phpflickr.php';
 		
-		$f = new Phpflickr($this->helper->cache['settings']['option_api'], $this->helper->cache['settings']['option_secret']);
+		$f = new phpFlickr($this->helper->cache['settings']['option_api'], $this->helper->cache['settings']['option_secret']);
 		$f->setToken($this->helper->cache['settings']['option_auth']);
 		
 		return array($f, $this->helper->cache['settings']);
@@ -498,28 +529,29 @@ class Eehive_flickr {
 	
 	
 	
-	function _size($size) {
-		// Default to square
-		$size = $size != '' ?  $size :  'square';
-		
+	function _size($size = 'square') {
 		switch ($size) {
-			case 'square':
-				$sz = "_s";
-				break;
 			case 'thumb':
+			case 'thumbnail': /* just in case someone tries it */
 				$sz = "_t";
 				break;
 			case 'small':
 				$sz = "_m";
 				break;
 			case 'medium':
+			case 'medium_500': /* just in case someone tries it */
 				$sz = "";
 				break;
-			case 'large':
-				$sz = "b";
+			case 'medium_640':
+				$sz = "_z";
 				break;
+			case 'large':
+				$sz = "_b";
+				break;
+			case 'square':
 			default:
-      			$sz = "";
+				$sz = "_s";
+				break;
 		}
 		
 		return $sz;
