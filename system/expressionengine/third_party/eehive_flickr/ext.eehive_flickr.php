@@ -294,15 +294,18 @@ class Eehive_flickr_ext {
 	{
 		$this->EE->load->library('api');
 		$this->EE->load->library('api/api_channel_fields'); 
-		
-		$eehive_flickr = $this->EE->api_channel_fields->get_global_settings('eehive_flickr');
-		if(count($eehive_flickr) > 0)
+
+		$settings = $this->EE->api_channel_fields->get_global_settings('eehive_flickr');
+
+		/* look for an earlier version when it was dww_flickr */
+		$settings = ($settings) ? $settings : $this->EE->api_channel_fields->get_global_settings('dww_flickr');
+
+		if($settings)
 		{
-			$this->settings = $this->_normalize_settings($eehive_flickr);
+			$this->settings = $this->_normalize_settings($settings);
 	
 			$this->EE->db->where('class', __CLASS__);
 			$this->EE->db->update('extensions', array('settings' => serialize($this->settings)));
-
 		}
 
 		// update global ft row just in case
