@@ -233,6 +233,13 @@ class Eehive_flickr_ext {
 	 */
 	function wygwam_config($config, $settings)
 	{
+		// If another extension shares the same hook,
+		// we need to get the latest and greatest config
+		if ($this->EE->extensions->last_call !== FALSE)
+		{
+			$config = $this->EE->extensions->last_call;
+		}
+
 		switch('shouldistayorshouldigo') :
 			case( ! array_key_exists('extraPlugins', $config)) :
 			case(strpos($config['extraPlugins'], 'flickr') === FALSE) :
@@ -294,15 +301,18 @@ class Eehive_flickr_ext {
 	{
 		$this->EE->load->library('api');
 		$this->EE->load->library('api/api_channel_fields'); 
-		
-		$eehive_flickr = $this->EE->api_channel_fields->get_global_settings('eehive_flickr');
-		if(count($eehive_flickr) > 0)
+
+		$settings = $this->EE->api_channel_fields->get_global_settings('eehive_flickr');
+
+		/* look for an earlier version when it was dww_flickr */
+		$settings = ($settings) ? $settings : $this->EE->api_channel_fields->get_global_settings('dww_flickr');
+
+		if($settings)
 		{
-			$this->settings = $this->_normalize_settings($eehive_flickr);
+			$this->settings = $this->_normalize_settings($settings);
 	
 			$this->EE->db->where('class', __CLASS__);
 			$this->EE->db->update('extensions', array('settings' => serialize($this->settings)));
-
 		}
 
 		// update global ft row just in case
