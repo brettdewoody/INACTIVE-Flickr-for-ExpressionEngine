@@ -233,6 +233,13 @@ class Eehive_flickr_ext {
 	 */
 	function wygwam_config($config, $settings)
 	{
+		// If another extension shares the same hook,
+		// we need to get the latest and greatest config
+		if ($this->EE->extensions->last_call !== FALSE)
+		{
+			$config = $this->EE->extensions->last_call;
+		}
+
 		switch('shouldistayorshouldigo') :
 			case( ! array_key_exists('extraPlugins', $config)) :
 			case(strpos($config['extraPlugins'], 'flickr') === FALSE) :
