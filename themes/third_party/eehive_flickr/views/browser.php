@@ -33,14 +33,6 @@
 	{
 		$photoBaseURL = "http://farm" . $photo['farm']. ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'];
 		$photoID = $photo['id'];
-		$photoUser = $photo['owner'];
-		$photoSize = "";
-		$photoTitle = $photo['title'];
-		$photoDescription = $photo['description'];
-		$photoArray = urlencode(serialize(array($photoBaseURL, $photoID, $photoSize, $photoTitle, $photoDescription, $photoUser)));
-
-		$photoBaseURL = "http://farm" . $photo['farm']. ".static.flickr.com/" . $photo['server'] . "/" . $photo['id'] . "_" . $photo['secret'];
-		$photoID = $photo['id'];
 		$photoSize = '';
 		$photoTitle = $photo['title'];
 		$photoDescription = $photo['description'];
