@@ -213,6 +213,7 @@ class Eehive_flickr {
 			$flickr_data = $flickr_photos[$i];
 			
 			$variable_row = array(
+				'set_url'				=> $flickr_settings['option_photourl'] . 'sets/' . $setId,
 				'flickr_img' 			=> 'http://farm' . $flickr_data['farm'] . '.static.flickr.com/' . $flickr_data['server'] . '/' . $flickr_data['id'] . '_' . $flickr_data['secret'] . $sz . '.jpg',
 				'flickr_url' 			=> $flickr_settings['option_photourl'] . '/' . $flickr_data['id'],
 				'flickr_url_square'		=> $f->buildPhotoURL($flickr_data, "square") ,
