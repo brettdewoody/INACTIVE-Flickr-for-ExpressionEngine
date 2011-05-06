@@ -31,6 +31,9 @@ class Eehive_flickr {
 		
 		$numPhotos = $this->EE->TMPL->fetch_param('limit');
 		$numPhotos = $numPhotos != '' ?  $numPhotos :  10;
+
+                $pageNum = $this->EE->TMPL->fetch_param('page');
+                $pageNum = $pageNum != '' ?  $pageNum :  1;
 		
 		// Load the flickr class
 		$flickr = $this->_flickr();
@@ -41,7 +44,7 @@ class Eehive_flickr {
 		$sz = $this->_size($this->EE->TMPL->fetch_param('size'));
 		
 		// Retrieve photostream from Flickr
-		$recent = $f->people_getPublicPhotos($flickr_settings['option_nsid'], 1, $this->api_extras, $numPhotos, 1);
+		$recent = $f->people_getPublicPhotos($flickr_settings['option_nsid'], 1, $this->api_extras, $numPhotos, $pageNum);
 
 		// If number of returned photo is less than num
 		$numPhotos = min($numPhotos,$recent['photos']['total']);
