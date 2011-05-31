@@ -153,11 +153,8 @@ class Eehive_flickr {
 		
 		// Retrieve sets from Flickr
 		$set = $f->photosets_getList($flickr_settings['option_nsid']);
-		//print_r($set);
 		
 		$variables = array();
-		
-		//for ($i = 0; $i < count($set); $i++) {
 			
 		for($i = 0; $i < count($set['photoset']); $i++) {
 			
@@ -169,7 +166,8 @@ class Eehive_flickr {
 				'set_url' 			=> $flickr_settings['option_photourl'] . 'sets/' . $photoset['id'],
 				'set_title' 		=> $photoset['title'],
 				'set_count' 		=> $photoset['photos'],
-				'set_id'			=> $photoset['id']
+				'set_id'			=> $photoset['id'],
+				'set_description'	=> $photoset['description']
 			);
 			
 			$variables[] = $variable_row;
