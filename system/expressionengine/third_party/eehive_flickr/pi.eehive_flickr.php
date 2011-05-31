@@ -167,7 +167,8 @@ class Eehive_flickr {
 				'set_title' 		=> $photoset['title'],
 				'set_count' 		=> $photoset['photos'],
 				'set_id'			=> $photoset['id'],
-				'set_description'	=> $photoset['description']
+				'set_description'	=> $photoset['description'],
+				'set_created'		=> $photoset['date_create']
 			);
 			
 			$variables[] = $variable_row;
