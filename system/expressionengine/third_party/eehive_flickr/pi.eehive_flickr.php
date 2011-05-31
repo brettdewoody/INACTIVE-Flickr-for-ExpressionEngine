@@ -294,7 +294,7 @@ class Eehive_flickr {
 		$sz = $this->_size($this->EE->TMPL->fetch_param('size'));
 		
 		// Retrieve sets from Flickr
-		$group_photos = $f->groups_pools_getPhotos($groupId, NULL, $flickr_settings['option_nsid'], NULL, $this->api_extras, $numPhotos, NULL);
+		$group_photos = $f->groups_pools_getPhotos($groupId, NULL, NULL, NULL, $this->api_extras, $numPhotos, NULL);
 		
 		$variables = array();
 		
