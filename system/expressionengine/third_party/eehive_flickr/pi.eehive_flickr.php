@@ -294,11 +294,11 @@ class Eehive_flickr {
 		$sz = $this->_size($this->EE->TMPL->fetch_param('size'));
 		
 		// Retrieve sets from Flickr
-		$group_photos = $f->groups_pools_getPhotos($groupId, NULL, NULL, $this->api_extras, $numPhotos, NULL);
+		$group_photos = $f->groups_pools_getPhotos($groupId, NULL, $flickr_settings['option_nsid'], NULL, $this->api_extras, $numPhotos, NULL);
 		
 		$variables = array();
 		
-		foreach ($group_photos['photo'] as $flickr_data) {
+		foreach($group_photos['photos']['photo'] as $flickr_data) {
 			
 			$variable_row = array(
 				'flickr_img' 			=> 'http://farm' . $flickr_data['farm'] . '.static.flickr.com/' . $flickr_data['server'] . '/' . $flickr_data['id'] . '_' . $flickr_data['secret'] . $sz . '.jpg',
