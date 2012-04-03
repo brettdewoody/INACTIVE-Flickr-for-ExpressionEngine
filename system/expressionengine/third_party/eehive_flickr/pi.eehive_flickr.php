@@ -23,7 +23,214 @@ class Eehive_flickr {
 		$this->api_extras = 'description,url_sq,url_t,url_s,url_m,url_z,url_l,url_o';
 
 	}
-	// END
+	
+	
+	/**
+	 * Wrapper for phpFlickr::photos_search()
+	 *
+	 * Many thanks to ORD (http://ordhq.com) for funding the work for this functionality!
+	 */
+	function search()
+	{
+		/*
+		 * Step 1: Setup
+		 */
+		// Load the flickr class
+		$flickr = $this->_flickr();
+		$f = $flickr[0];
+		$flickr_settings = $flickr[1];
+
+		// array of all supported parameters to pass to Flickr's search endpoint
+		$supported = array(
+			'api_key',
+			'user_id',
+			'tags',
+			'tag_mode',
+			'text',
+			'min_upload_date',
+			'max_upload_date',
+			'min_taken_date',
+			'max_taken_date',
+			'license',
+			'sort',
+			'privacy_filter',
+			'bbox',
+			'accuracy',
+			'safe_search',
+			'content_type',
+			'machine_tags',
+			'machine_tag_mode',
+			'group_id',
+			'contacts',
+			'woe_id',
+			'place_id',
+			'media',
+			'has_geo',
+			'geo_context',
+			'lat',
+			'lon',
+			'radius',
+			'radius_units',
+			'is_commons',
+			'in_gallery',
+			'is_getty',
+			'extras',
+			'per_page',
+			'page',
+			
+			// aliases just to cover our bases
+			'limit',
+			'tag',
+			'group',
+			'nsid'
+		);
+		
+		// minimum default parameters to pass
+		$default = array(
+			'api_key',
+			'extras',
+			'per_page'
+		);
+
+
+		/*
+		 * Step 2: build our $params array that will be passed to phpFlickr::photos_search()
+		 */
+		
+		// 'IMF': magical Intersect, Merge & Flip
+		$params = array_flip(array_merge($default, array_intersect($supported, array_keys($this->EE->TMPL->tagparams))));
+		
+		// fetch each param in turn
+		foreach($params as $param => $value)
+		{
+			// our valid tags
+			switch($param) :
+			
+				case('nsid') :
+				case('user_id') :
+					$params['user_id'] = $this->EE->TMPL->fetch_param($param, 'me');
+				break;
+				
+				case('api_key') :
+					$params['api_key'] = $this->EE->TMPL->fetch_param($param, $flickr_settings['option_api']);
+				break;
+			
+				case('extras') :
+					// need to be sure extras are only appended, not overwritten
+					$params['extras'] = $this->api_extras . ',' . $this->EE->TMPL->fetch_param($param);
+				break;
+				
+				case('tag_mode') :
+					$params['tag_mode'] = $this->EE->TMPL->fetch_params($param, 'any');
+					
+					// aliases need to be matched
+					if(stristr($params['tag_mode'], 'or'))
+					{
+						$params['tag_mode'] = 'any';
+					}
+
+					if(stristr($params['tag_mode'], 'and'))
+					{
+						$params['tag_mode'] = 'all';
+					}
+				break;
+				
+				case('limit') :
+				case('per_page') :
+					$params['per_page'] = $this->EE->TMPL->fetch_param($param, 10);
+				break;
+				
+				case('page') :
+					$params['page'] = $this->EE->TMPL->fetch_param($param, 1);
+				break;
+
+				case('tag') :
+				case('tags') :
+					$params['tags'] = $this->EE->TMPL->fetch_param($param);
+				break;
+
+				// for all else, just defaults
+				default :
+					$params[$param] = $this->EE->TMPL->fetch_param($param);
+				break;
+			endswitch;
+		}
+
+
+		/*
+		 * Step 3: Fire off search & handle results
+		 */
+		$result = $f->photos_search($params);
+
+		if($result && is_array($result) && $result['total'] > 0)
+		{
+
+			// Get the desired size, or default to square
+			$sz = $this->_size($this->EE->TMPL->fetch_param('size'), 'square');
+	
+			// Establish our prefix (undocumented)
+			$prefix = $this->EE->TMPL->fetch_param('prefix', 'flickr_');
+
+			// our eventual array to parse against tagdata
+			$variables = array();
+
+
+			// loop through our photos
+			foreach($result['photo'] as $flickr_data)
+			{
+
+				$variable_row = array(
+					$prefix . 'img' 			=> 'http://farm' . $flickr_data['farm'] . '.static.flickr.com/' . $flickr_data['server'] . '/' . $flickr_data['id'] . '_' . $flickr_data['secret'] . $sz . '.jpg',
+					$prefix . 'url' 			=> 'http://www.flickr.com/photos/' . $flickr_data['owner'] . '/' . $flickr_data['id'] . '/',
+					$prefix . 'url_square'		=> $f->buildPhotoURL($flickr_data, "square"),
+					$prefix . 'url_thumb'		=> isset($flickr_data['url_t']) ? $flickr_data['url_t'] : '',
+					$prefix . 'url_small' 		=> isset($flickr_data['url_s']) ? $flickr_data['url_s'] : '',
+					$prefix . 'url_medium' 		=> isset($flickr_data['url_m']) ? $flickr_data['url_m'] : '',
+					$prefix . 'url_medium_640'	=> isset($flickr_data['url_z']) ? $flickr_data['url_z'] : '',
+					$prefix . 'url_large'	 	=> isset($flickr_data['url_l']) ? $flickr_data['url_l'] : '',
+					$prefix . 'url_orig' 		=> isset($flickr_data['url_o']) ? $flickr_data['url_o'] :  '',
+					$prefix . 'title' 			=> $flickr_data['title']
+				);
+				
+				// any extras to parse?
+				$extras = explode(',', $params['extras']);
+				foreach($extras as $extra)
+				{
+					// if original_format, then both originalsecret & originalformat are returned
+					// may not be available for all images
+					if($extra == 'original_format')
+					{
+						$variable_row[$prefix . 'originalsecret'] = isset($flickr_data['originalsecret']) ? $flickr_data['originalsecret'] :  '';
+						$variable_row[$prefix . 'originalformat'] = isset($flickr_data['originalformat']) ? $flickr_data['originalformat'] :  '';
+					}
+					else
+					{
+						$variable_row[$prefix . $extra] = isset($flickr_data[$extra]) ? $flickr_data[$extra] :  '';
+					}
+				}
+				
+				$variables[] = $variable_row;
+			}
+			
+			$this->return_data = $this->EE->TMPL->parse_variables($this->EE->TMPL->tagdata, $variables);
+
+			// cleanup
+			unset($variables, $variable_row, $prefix, $sz);
+		}
+		else
+		{
+			// Nothing - show No Results
+			$this->return_data = $this->EE->TMPL->no_results();
+		}
+
+		// cleanup
+		unset($result, $params, $default, $supported, $f, $flickr, $flickr_settings);
+
+		// release the hounds!
+		return $this->return_data;
+	}
+	// ------------------------------------------------------------
+	
 
 	function photostream() {
 		
