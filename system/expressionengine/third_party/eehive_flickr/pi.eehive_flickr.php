@@ -307,7 +307,7 @@ class Eehive_flickr {
 		$sz = $this->_size($this->EE->TMPL->fetch_param('size'));
 		
 		// Retrieve favorites from Flickr
-		$favorites = $f->favorites_getPublicList($flickr_settings['option_nsid'], NULL, NULL, $this->api_extras, $numPhotos, 1);
+		$favorites = $f->favorites_getPublicList($flickr_settings['option_nsid'], NULL, NULL, NULL, $this->api_extras, $numPhotos, 1);
 		
 		// If number of returned photo is less than num
 		$numPhotos = min($numPhotos,$favorites['photos']['total']);
