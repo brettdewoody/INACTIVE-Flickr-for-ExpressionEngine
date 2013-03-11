@@ -237,6 +237,7 @@ class Eehive_flickr {
 		$template = $this->EE->TMPL->tagdata;
 		
 		$numPhotos = $this->EE->TMPL->fetch_param('limit');
+		$username = $this->EE->TMPL->fetch_param('username');
 		$numPhotos = $numPhotos != '' ?  $numPhotos :  10;
 
                 $pageNum = $this->EE->TMPL->fetch_param('page');
@@ -250,9 +251,19 @@ class Eehive_flickr {
 		// Get the desired size, or default to square
 		$sz = $this->_size($this->EE->TMPL->fetch_param('size'));
 		
+		// Find the NSID of the username
+		$person = $f->people_findByUsername($username);
+		
 		// Retrieve photostream from Flickr
-		$recent = $f->people_getPublicPhotos($flickr_settings['option_nsid'], 1, $this->api_extras, $numPhotos, $pageNum);
-
+		if($person)
+		{
+		  $recent = $f->people_getPublicPhotos($person['id'], 1, $this->api_extras, $numPhotos, $pageNum);
+		}
+		else
+		{
+		  $recent = $f->people_getPublicPhotos($flickr_settings['option_nsid'], 1, $this->api_extras, $numPhotos, $pageNum);
+		}
+		
 		// If number of returned photo is less than num
 		$numPhotos = min($numPhotos,$recent['photos']['total']);
 		
