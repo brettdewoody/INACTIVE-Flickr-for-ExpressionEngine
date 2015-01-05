@@ -1,15 +1,3 @@
 #THIS ADD-ON IS INACTIVE#
 
 This add-on is no longer maintained and probably won't work with current or future versions of ExpressionEngine.
-
-*UPGRADING FROM 2.1.0 or 2.1.1?*
-Flickr's activation settings have been moved from the Fieldtype to an Extension.
-Therefore you MUST activate the extension for Flickr to keep working.
-
-* SETTING UP A WYGWAM BUTTON*
-1: Be sure EE Hive Flickr is installed and configured correctly
-2. Be sure to copy the /themes/third_party/wygwam/lib/ckeditor/plugins/flickr folder into the correct place within the wygwam themes folder (keep note of this if you are updating wygwam in the future)
-3: Go to Modules > Wygwam and select a Editor Configuration to modify
-4. Be sure that your toolbar includes the "Image" button and that it is active
-5. Under the Advanced Settings, add a new row; select "extraPlugins" in the dropdown, and enter "flickr" into the text field
-6. Save changes. Now your custom field that is using that wygwam toolbar configuration should have a Flickr button!
