@@ -1,4 +1,6 @@
-*INACTIVE - This add-on is no longer maintained and probably won't work.*
+#THIS ADD-ON IS INACTIVE#
+
+This add-on is no longer maintained and probably won't work with current or future versions of ExpressionEngine.
 
 *UPGRADING FROM 2.1.0 or 2.1.1?*
 Flickr's activation settings have been moved from the Fieldtype to an Extension.
